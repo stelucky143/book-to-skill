@@ -22,3 +22,21 @@ site/
 docs/guide.md
 docs/skill-reference.md
 docs/BACKERS.md
+
+# SaaS backend: local SQLite DB and .env secrets
+*.db
+saas/backend/.env
+saas/web/.env.local
+saas/.env
+
+# Node / Next.js build artifacts
+node_modules/
+saas/web/.next/
+saas/web/out/
+
+# Expo build artifacts
+saas/mobile/.expo/
+saas/mobile/dist/
+
+# Local skill storage (dev)
+.bookskill/

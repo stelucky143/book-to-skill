@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "BookSkill",
+    "slug": "bookskill",
+    "scheme": "bookskill",
+    "platforms": ["ios", "android"],
+    "plugins": ["expo-router"],
+    "icon": "./assets/icon.png"
+  }
+}

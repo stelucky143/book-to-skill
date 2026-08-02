@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ..
+      dockerfile: saas/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - AI_PROVIDER=${AI_PROVIDER:-openai}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AI_MODEL=${AI_MODEL:-gpt-4o-mini}
+      - SKILLS_ROOT=${SKILLS_ROOT:-/var/app/skills}
+      - DATABASE_URL=sqlite:////var/app/bookskill.db
+      - MAX_UPLOAD_BYTES=${MAX_UPLOAD_BYTES:-52428800}
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - skills_data:/var/app/skills
+      - db_data:/var/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Web Frontend ─────────────────────────────────────────────────────────────
+  web:
+    build:
+      context: web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  skills_data:
+    driver: local
+  db_data:
+    driver: local
